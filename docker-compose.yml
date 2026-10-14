@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: soc-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: soc_user
+      POSTGRES_PASSWORD: soc_password
+      POSTGRES_DB: soc_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    container_name: soc-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:
