@@ -1,4 +1,6 @@
 from typing import Any, Dict, List
+import joblib
+from pathlib import Path
 
 from ml.preprocessing.parser import parse_event
 from ml.preprocessing.feature_engineering import extract_features
@@ -45,6 +47,47 @@ class ThreatDetectionPipeline:
     """
     End-to-end security threat detection pipeline.
     """
+
+    def load_models(self) -> None:
+        """
+        Load previously trained models from disk.
+        """
+
+        project_root = Path(__file__).resolve().parents[1]
+
+        models_dir = (
+            project_root
+            / "artifacts"
+            / "models"
+        )
+
+        anomaly_model_path = (
+            models_dir / "anomaly_detector.pkl"
+        )
+
+        classifier_model_path = (
+            models_dir / "threat_classifier.pkl"
+        )
+
+        if not anomaly_model_path.exists():
+            raise FileNotFoundError(
+                f"Anomaly model not found: {anomaly_model_path}"
+            )
+
+        if not classifier_model_path.exists():
+            raise FileNotFoundError(
+                f"Classifier model not found: {classifier_model_path}"
+            )
+
+        self.anomaly_detector = joblib.load(
+            anomaly_model_path
+        )
+
+        self.classifier = joblib.load(
+            classifier_model_path
+        )
+
+        print("Trained models loaded successfully.")
 
     def __init__(self):
         self.anomaly_detector = AnomalyDetector()

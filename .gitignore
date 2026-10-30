@@ -48,3 +48,6 @@ Thumbs.db
 *.key
 
 *.env
+
+# Trained ML model artifacts
+artifacts/models/
